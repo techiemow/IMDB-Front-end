@@ -4,12 +4,19 @@ import './App.css';
 import Navbar from './Components/Navbar';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   return (
     <>
       <Navbar />
-      {/* Other components can go here */}
+      {isLoading ? (
+      <div className="loading">Loading...</div>
+    ) : (
+      <main className='min-h-[calc(100vh-120px)] source'>
+        <Outlet />
+    
+      </main>
+    )}
     </>
   );
 }
