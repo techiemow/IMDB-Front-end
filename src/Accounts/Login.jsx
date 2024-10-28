@@ -77,11 +77,14 @@ const Login = () => {
     const { username, password } = values;
 
 
-    const apiResponse = await axios.get(`${apiurl}/Login/${username}/${password}`, {
-      withCredentials: true
+     console.log(`${apiurl}/Login/${username}/${password}`);
+     
+     const apiResponse = await axios.post(`${apiurl}/Login`, { username, password }, {
+      withCredentials: true,
     });
+    
 
-    console.log(apiResponse.data.data)
+    console.log(apiResponse)
     if (apiResponse.data.success) {
       localStorage.setItem('login', apiResponse.data.data.user.username);
       localStorage.setItem('usertoken', apiResponse.data.data.token);

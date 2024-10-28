@@ -1,8 +1,11 @@
 import React from 'react'
+import Popularmovies from './Popularmovies'
 
 const Home = () => {
   return (
-    <div>Home</div>
+    <div>
+      <Popularmovies />
+    </div>
   )
 }
 

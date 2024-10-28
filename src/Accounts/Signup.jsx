@@ -12,7 +12,8 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import bcrypt from 'bcryptjs';
+import bcryptjs from 'bcryptjs';
+
 import * as Yup from 'yup';
 import axios from 'axios';
 import { GrDocumentUser } from "react-icons/gr";
@@ -87,7 +88,7 @@ export default function SignUp() {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     console.log(values);
     try {
-      const hashedPassword = await bcrypt.hash(values.password, 10);
+      const hashedPassword = await bcryptjs.hash(values.password, 10);
       const apiResponse = await axios.post(`${apiurl}/Signup`, {
         username: values.username,
         phoneNumber: values.phoneNumber,
