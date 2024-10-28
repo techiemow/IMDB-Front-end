@@ -104,6 +104,7 @@ const Popularmovies = () => {
                 {movie.title}
               </Typography>
               <Poster
+                
                 component="img"
                 className='px-6'
                 image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}

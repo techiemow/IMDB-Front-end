@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import { toast } from 'react-toastify';
 import { apiurl } from '../../Constants/Apiurl';
+import { Button, Grid } from '@mui/material';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -41,6 +42,7 @@ const Navbar = () => {
   };
 
   return (
+    <>
     <header className="h-20 shadow-md bg-white w-full py-3">
       <div className="container mx-auto flex items-center px-10 pb-4 h-full justify-between">
         <div className="flex items-center" style={{ marginTop: '10px' }}>
@@ -70,6 +72,18 @@ const Navbar = () => {
         </div>
       </div>
     </header>
+       <Grid container justifyContent={"center"} columnSpacing={2}>
+       <Grid item>
+         <Button variant="text">Movies</Button>
+       </Grid>
+       <Grid item>
+         <Button variant="text">Actors</Button>
+       </Grid>
+       <Grid item>
+         <Button variant="text">Producers</Button>
+       </Grid>
+     </Grid>
+     </>
   );
 };
 
