@@ -74,13 +74,13 @@ const Navbar = () => {
     </header>
        <Grid container justifyContent={"center"} columnSpacing={2}>
        <Grid item>
-         <Button variant="text">Movies</Button>
+         <Button variant="text" onClick={()=>{navigate("/")}} >Movies</Button>
        </Grid>
        <Grid item>
-         <Button variant="text">Actors</Button>
+         <Button variant="text" onClick={()=>{navigate("/ActorsHome")}}>Actors</Button>
        </Grid>
        <Grid item>
-         <Button variant="text">Producers</Button>
+         <Button variant="text" onClick={()=>{navigate("/ProducersHome")}}>Producers</Button>
        </Grid>
      </Grid>
      </>

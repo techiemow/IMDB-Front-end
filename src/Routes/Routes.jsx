@@ -5,6 +5,10 @@ import Home from "../Components/Home";
 import Login from "../Accounts/Login";
 import SignUp from "../Accounts/Signup";
 import AddMovieForm from "../Components/AddMovie";
+import ActorsHome from "../Components/ActorsHome";
+import AddNewActor from "../Components/AddNewActor";
+import AddProducer from "../Components/AddProducer";
+import ProducerHome from "../Components/ProducerHome";
 
 const router = createBrowserRouter([
     {
@@ -18,6 +22,24 @@ const router = createBrowserRouter([
             {
                 path:"/AddMovie",
                 element:<AddMovieForm />
+            },
+            {
+                path:"/ActorsHome",
+                element:<ActorsHome />
+
+            },
+            {
+                path:"/AddNewActor",
+                element:<AddNewActor />
+            },
+            {
+                path:"/ProducersHome",
+                element:<ProducerHome />
+            },
+            
+            {
+                path:"/AddNewProducer",
+                element:<AddProducer />
             }
         ]
 
