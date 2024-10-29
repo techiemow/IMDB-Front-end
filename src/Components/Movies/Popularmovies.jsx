@@ -10,6 +10,7 @@ import {
   Grid,
 } from '@mui/material';
 import { styled } from '@mui/system';
+import { useNavigate } from 'react-router-dom';
 
 const StyledCard = styled(Card)(({ theme }) => ({
     backgroundColor: '#f5f5f5',
@@ -41,6 +42,7 @@ const Popularmovies = () => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPopularMovies = async () => {
@@ -99,12 +101,11 @@ const Popularmovies = () => {
       <Grid container spacing={2}>
         {movies.map((movie) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={movie.id}>
-            <StyledCard>
+            <StyledCard onClick={() => navigate(`/PopularMovieDetails/${movie.id}`)}> {/* Navigate on click */}
               <Typography variant="h6" align="center" gutterBottom>
                 {movie.title}
               </Typography>
               <Poster
-                
                 component="img"
                 className='px-6'
                 image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}

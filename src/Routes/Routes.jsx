@@ -17,6 +17,8 @@ import UpdateMovie from "../Components/Movies/UpdateMovie";
 import UpdateActor from "../Components/Actors/UpdateActor";
 import UpdateProducer from "../Components/Producers/Updateproducer";
 import TMDBSearch from "../Components/TMDB/TMDBSearch";
+import PopularMovieInDetails from "../Components/Movies/PopularMovieInDetails";
+import PopularActorInDetails from "../Components/Actors/PopularActorInDetails";
 
 const router = createBrowserRouter([
     {
@@ -26,6 +28,10 @@ const router = createBrowserRouter([
             {
                 path:"/",
                 element: <Home />,
+            },
+            {
+                path:"/PopularMovieDetails/:id",
+                element:<PopularMovieInDetails />
             },
             {
                 path:"/AddMovie",
@@ -52,6 +58,10 @@ const router = createBrowserRouter([
                 path:"/actor/:id",
                 element:<ActorsDetails />
                    
+            },
+            {
+                path:"/PopularActorInDetails/:id",
+                element:<PopularActorInDetails/>
             },
             {
                   path:"/UpdateActor/:id",

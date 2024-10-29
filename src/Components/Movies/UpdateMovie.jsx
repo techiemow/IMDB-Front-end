@@ -89,7 +89,7 @@ const UpdateMovie = () => {
   };
 
  return (
-  <Container maxWidth="md">
+  <Container maxWidth="md" style={{marginBottom:"15px"}}>
     <Typography variant="h4" align="center" gutterBottom>
       Update Movie
     </Typography>
@@ -156,7 +156,7 @@ const UpdateMovie = () => {
         {/* Display Producer */}
         <Grid item xs={12}>
           <Typography variant="h6">Producer</Typography>
-          {formValues.producer.name ? (
+          {formValues?.producer?.name ? (
             <Typography>{formValues.producer.name} (Gender: {formValues.producer.gender}, DOB: {new Date(formValues.producer.dob).toLocaleDateString()})</Typography>
           ) : (
             <Typography>No producer available.</Typography>

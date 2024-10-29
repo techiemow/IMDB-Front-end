@@ -10,6 +10,7 @@ import {
   Grid,
 } from '@mui/material';
 import { styled } from '@mui/system';
+import { useNavigate } from 'react-router-dom';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   backgroundColor: '#f5f5f5',
@@ -17,6 +18,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
   cursor: 'pointer',
   '&:hover': {
     transform: 'scale(1.05)',
+    boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
   },
 }));
 
@@ -30,6 +32,7 @@ const PopularActors = () => {
   const [actors, setActors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const navigate = useNavigate(); // Hook for navigation
 
   useEffect(() => {
     const fetchPopularActors = async () => {
@@ -49,6 +52,10 @@ const PopularActors = () => {
     fetchPopularActors();
   }, []);
 
+  const handleCardClick = (id) => {
+    navigate(`/PopularActorInDetails/${id}`); // Navigate to actor detail page
+  };
+
   if (loading) return <CircularProgress />;
   if (error) return <div>{error}</div>;
 
@@ -60,7 +67,7 @@ const PopularActors = () => {
       <Grid container spacing={2}>
         {actors.map((actor) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={actor.id}>
-            <StyledCard>
+            <StyledCard onClick={() => handleCardClick(actor.id)}>
               <ActorImage
                 component="img"
                 image={`https://image.tmdb.org/t/p/w500${actor.profile_path}`}
