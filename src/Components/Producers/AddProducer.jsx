@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { TextField, Button, Typography, Container, MenuItem, Box, Stack, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { apiurl } from '../../../Constants/Apiurl';
@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import UploadImage from '../../Helpers/UploadImage';
 import { MdDelete } from 'react-icons/md';
+import IMDBContext from '../../../Context/Context';
 
 const AddProducer = () => {
   const [formValues, setFormValues] = useState({
@@ -18,6 +19,8 @@ const AddProducer = () => {
   });
 
   const navigate = useNavigate();
+
+  const {fetchProducers} = useContext(IMDBContext)
 
   // Function to handle image upload
   const handleUploadImage = async (event, type, index) => {
@@ -62,7 +65,8 @@ const AddProducer = () => {
           ProducerImages: [], 
           movies: [{ name: '', releaseDate: '', plot: '', movieImages: [] }],
         });
-        navigate("/ActorsHome");
+        navigate("/ProducersHome");
+        fetchProducers()
       } else {
         toast.error('Error adding the producer. Please try again later.');
       }
@@ -92,12 +96,12 @@ const AddProducer = () => {
 
   // Function to handle Cancel button click
   const handleCancel = () => {
-    navigate('/ActorsHome');
+    navigate('/ProducersHome');
   };
 
   return (
     <Container maxWidth="sm">
-      <Box sx={{ mt: 5 }}>
+      <Box sx={{ mt: 5,  mb:5 }}>
         <Typography variant="h4" align="center" gutterBottom>
           Add New Producer
         </Typography>

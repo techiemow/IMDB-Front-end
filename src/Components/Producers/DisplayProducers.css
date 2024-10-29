@@ -28,3 +28,58 @@
   object-fit: cover; /* Maintain aspect ratio and cover */
   border-radius: 8px 8px 0 0; /* Rounded corners for the image */
 }
+
+/* Center and space the cards in a responsive grid */
+.producers-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* Style each producer card */
+.producer-card {
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.producer-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Image styling */
+.producer-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+/* Limit bio text to four lines with ellipsis */
+.producer-card .MuiCardContent-root {
+  padding: 16px;
+}
+
+.producer-card .MuiTypography-body2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4; /* Show only 4 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+}
+
+/* Typography adjustments for consistent alignment */
+.producer-card .MuiTypography-h6 {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.producer-card .MuiTypography-body2 {
+  color: #555;
+  margin-bottom: 6px;
+}

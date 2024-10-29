@@ -13,7 +13,7 @@ const ProducerDetails = () => {
         const fetchProducerDetails = async () => {
             try {
                 const response = await axios.get(`${apiurl}/producer/${id}`); // Adjust the URL as necessary
-                const data = response.data;
+                const data = response.data.data;
                 setProducer(data);
             } catch (error) {
                 console.error("Error fetching producer details:", error);
@@ -28,18 +28,17 @@ const ProducerDetails = () => {
     }
 
     return (
-        <Container>
-            <Typography variant="h4" align="center">{producer.name}</Typography>
-            {producer.ProducerImages.length > 0 && (
+        <Container className="py-6">
+            <Typography variant="h4" align="center" className="mb-4">{producer.name}</Typography>
+            {producer.ProducerImages && producer.ProducerImages.length > 0 && (
                 <CardMedia
                     component="img"
                     alt={producer.name}
-                    height="200" // Adjusted height for the image
-                    image={producer.ProducerImages[0]} // Display the first image
-                    style={{ display: 'block', margin: '0 auto' }} // Center the image
+                    className="mx-auto mb-4 rounded-lg max-w-xs" // Center and limit the image size
+                    image={producer.ProducerImages[0]}
                 />
             )}
-            <TableContainer component={Paper} style={{ marginTop: '20px' }}>
+            <TableContainer component={Paper} className="mt-4">
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -58,7 +57,7 @@ const ProducerDetails = () => {
                         </TableRow>
                         <TableRow>
                             <TableCell>Bio</TableCell>
-                            <TableCell>{producer.bio}</TableCell>
+                            <TableCell className="max-w-sm overflow-hidden text-ellipsis">{producer.bio}</TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
@@ -68,13 +67,13 @@ const ProducerDetails = () => {
             <Grid container spacing={2} justifyContent="center">
                 {producer.movies.map((movie) => (
                     <Grid item key={movie._id} xs={12} sm={6} md={4}>
-                        <Card style={{ height: '100%' }}> {/* Make card full height */}
+                        <Card className="h-full cursor-pointer" onClick={() => navigate(`/movie/${movie._id}`)}>
                             <CardMedia
                                 component="img"
                                 alt={movie.name}
                                 height="200" // Adjusted height for movie images
                                 image={movie.movieImages[0]} // Display the first image
-                                style={{ display: 'block', margin: '0 auto' }} // Center the movie image
+                                className="mx-auto" // Center the movie image
                             />
                             <CardContent>
                                 <Typography variant="h6" align="center">{movie.name}</Typography>
@@ -92,9 +91,9 @@ const ProducerDetails = () => {
                     </Grid>
                 ))}
             </Grid>
-            <div className='flex justify-center gap-6'>
-                <Button onClick={() => navigate('/')} variant="contained" color="primary" style={{ marginTop: '20px' }}>Back</Button>
-                <Button onClick={() => navigate('/update')} variant="contained" color='secondary' style={{ marginTop: '20px' }}>Update</Button>
+            <div className="flex justify-center gap-4 mt-6">
+                <Button onClick={() => navigate('/ProducersHome')} variant="contained" color="primary">Back</Button>
+                <Button onClick={() => navigate(`/UpdateProducer/${id}`)} variant="contained" color='secondary'>Update</Button>
             </div>
         </Container>
     );

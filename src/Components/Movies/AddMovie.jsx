@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Container, Grid, TextField, Button, Typography } from '@mui/material';
 import { MdDelete } from "react-icons/md";
 import axios from 'axios';
@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 import UploadImage from '../../Helpers/UploadImage';
 import { apiurl } from '../../../Constants/Apiurl';
+import IMDBContext from '../../../Context/Context';
 
 const AddMovieForm = () => {
   const [formValues, setFormValues] = useState({
@@ -14,16 +15,28 @@ const AddMovieForm = () => {
     releaseDate: '',
     plot: '',
     movieImages: [],
-    tmdbId: "",
+    tmdbId: "", // Initially empty, will be set on mount
     actors: [], // Array of actor objects
     producer: {}, // Single producer object
   });
 
+  const navigate = useNavigate();
+
+  const { fetchMovies } = useContext(IMDBContext);
+  
+
+  // Function to generate a random TMDB ID
   const generateRandomTmdbId = () => {
     return Math.floor(100000 + Math.random() * 900000); // Generates a random 6-digit number
   };
 
-  const navigate = useNavigate();
+  // Set the initial tmdbId on component mount
+  useEffect(() => {
+    setFormValues((prev) => ({
+      ...prev,
+      tmdbId: generateRandomTmdbId() // Set a random TMDB ID
+    }));
+  }, []); // Empty dependency array means this runs once on mount
 
   const handleUploadImage = async (event) => {
     const file = event.target.files[0];
@@ -32,7 +45,6 @@ const AddMovieForm = () => {
         const imageUrl = await UploadImage(file);
         setFormValues((prev) => ({
           ...prev,
-         
           movieImages: [...prev.movieImages, imageUrl]
         }));
       } catch (error) {
@@ -50,16 +62,20 @@ const AddMovieForm = () => {
 
       if (response.data.success) {
         toast.success(response.data.message);
+        // Reset form values, including generating a new TMDB ID
         setFormValues({
           name: '',
           releaseDate: '',
           plot: '',
           movieImages: [],
-          tmdbId: generateRandomTmdbId(),
+          tmdbId: generateRandomTmdbId(), // Generate a new ID for the next movie
           actors: [],
           producer: {},
         });
+        
+        fetchMovies();
         navigate("/");
+
       } else {
         toast.error('Error adding the movie. Please try again later.');
       }
@@ -89,7 +105,7 @@ const AddMovieForm = () => {
   };
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" style={{marginBottom:"20px"}}>
       <Typography variant="h4" align="center" gutterBottom>
         Add a New Movie
       </Typography>
@@ -111,7 +127,8 @@ const AddMovieForm = () => {
               variant="outlined"
               fullWidth
               value={formValues.tmdbId}
-              onChange={(e) => setFormValues({ ...formValues, tmdbId: e.target.value })}
+              // Remove the onChange here to prevent overwriting the TMDB ID
+              disabled // Optional: Disable this field to prevent manual edits
               required
             />
           </Grid>
@@ -208,6 +225,7 @@ const AddMovieForm = () => {
             <Button
               variant="contained"
               onClick={handleAddActor}
+              sx={{ mt: 2 }}
             >
               Add Actor
             </Button>
@@ -302,8 +320,11 @@ const AddMovieForm = () => {
             </div>
           </Grid>
           <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary" fullWidth>
+            <Button type="submit" variant="contained" color="primary" >
               Add Movie
+            </Button>
+            <Button style={{margin:"10px"}} variant="contained"  color="error" onClick={()=>{navigate("/")}}>
+              Cancel
             </Button>
           </Grid>
         </Grid>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { TextField, Button, Typography, Container, MenuItem, Box, Stack, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { apiurl } from '../../../Constants/Apiurl';
@@ -6,8 +6,11 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import UploadImage from '../../Helpers/UploadImage';
 import { MdDelete } from 'react-icons/md';
+import IMDBContext from '../../../Context/Context';
 
 const AddNewActor = () => {
+
+  const {fetchActors} = useContext(IMDBContext)
   const [formValues, setFormValues] = useState({
     name: '',
     gender: '',
@@ -62,6 +65,7 @@ const AddNewActor = () => {
             ActorImages: [], 
             movies: [{ name: '', releaseDate: '', plot: '', movieImages: [] }],
         });
+        fetchActors();
         navigate("/ActorsHome");
       } else {
         toast.error('Error adding the movie. Please try again later.');
@@ -97,7 +101,7 @@ const AddNewActor = () => {
 
   return (
     <Container maxWidth="sm">
-      <Box sx={{ mt: 5 }}>
+      <Box sx={{ mt: 5 , mb:5 }}>
         <Typography variant="h4" align="center" gutterBottom>
           Add New Actor
         </Typography>

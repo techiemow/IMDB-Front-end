@@ -16,6 +16,7 @@ import axios from 'axios';
 import { apiurl } from '../Constants/Apiurl';
 import { setActors, setActorLoading, setActorError } from './Store/ActorReducer';
 import { setProducerError, setProducerLoading, setProducers } from './Store/ProducerReducer';
+import Footer from './Components/Footer';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true); // Initialize loading state
@@ -87,7 +88,7 @@ function App() {
 
   return (
     <>
-    <IMDBContext.Provider value={{fetchMovies}}>
+    <IMDBContext.Provider value={{fetchMovies,fetchActors,fetchProducers}}>
     <ToastContainer position="top-center" autoClose={5000} />
       <Navbar />
       {isLoading ? (
@@ -98,6 +99,7 @@ function App() {
     
       </main>
     )}
+    <Footer />
     </IMDBContext.Provider >
     </>
   );

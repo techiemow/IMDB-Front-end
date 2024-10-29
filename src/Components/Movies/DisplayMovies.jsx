@@ -1,15 +1,13 @@
-import { Card, CardContent, CardMedia, Container, Typography } from '@mui/material';
+import { Card, CardContent, CardMedia, Container, Typography, Grid, Button } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom'; 
-import "./DisplayMovies.css"
-
-
+import { useNavigate } from 'react-router-dom';
+import "./DisplayMovies.css";
 
 const DisplayMovies = () => {
   const movies = useSelector((state) => state.movies.movies);
   const loading = useSelector((state) => state.movies.loading);
   const error = useSelector((state) => state.movies.error);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   if (loading) {
     return <div>Loading...</div>;
@@ -20,7 +18,7 @@ const DisplayMovies = () => {
   }
 
   const handleCardClick = (id) => {
-    navigate(`/movie/${id}`); // Navigate to the movie details page with the movie ID
+    navigate(`/movie/${id}`);
   };
 
   return (
@@ -28,36 +26,37 @@ const DisplayMovies = () => {
       <Typography variant="h4" align="center" gutterBottom>
         Recently Added Movies
       </Typography>
-      <div className="movies-container">
-        {movies.map((movie) => (
-          <Card
-            className="movie-card" 
-            key={movie._id} 
-            onClick={() => handleCardClick(movie._id)} // Add onClick to the Card
-            style={{ cursor: 'pointer' }} // Change cursor style for better UX
-          >
-            {movie.movieImages.length > 0 && (
-              <CardMedia
-                component="img"
-                alt={movie.name}
-                height="200" // Adjusted height for smaller cards
-                image={movie.movieImages[0]} // Display the first image
-              />
-            )}
-            <CardContent>
-              <Typography variant="h6" component="div">
-                {movie.name}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {movie.plot}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Release Date: {new Date(movie.releaseDate).toLocaleDateString()}
-              </Typography>
-            </CardContent>
-          </Card>
+      <Grid container spacing={2}>
+        {movies.map((movie, index) => (
+          <Grid item key={movie._id} xs={12} sm={6} md={4}>
+            <Card sx={{ maxWidth: 345, height: '100%' }} onClick={() => handleCardClick(movie._id)} style={{ cursor: 'pointer' }}>
+              <div style={{ position: "relative" }}>
+                {movie.movieImages.length > 0 && (
+                  <CardMedia
+                    sx={{ height: 275 }}
+                    image={movie.movieImages[movie.movieImages.length - 1]} // Display the last image
+                    title={`${movie.name} image`}
+                  />
+                )}
+            
+              </div>
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  {movie.name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  <b>Plot: {movie.plot}</b>
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Release Date: {new Date(movie.releaseDate).toLocaleDateString()}
+                </Typography>
+                {/* Additional fields can be added here as needed */}
+              </CardContent>
+              <Button size="small" onClick={() => handleCardClick(movie._id)}>View Details</Button>
+            </Card>
+          </Grid>
         ))}
-      </div>
+      </Grid>
     </Container>
   );
 };
