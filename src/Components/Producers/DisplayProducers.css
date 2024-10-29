@@ -1,0 +1,30 @@
+/* DisplayProducers.css */
+
+.producers-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Center the cards */
+  margin: 20px auto; /* Center the container */
+}
+
+.producer-card {
+  margin: 15px; /* Space between cards */
+  transition: transform 0.2s, box-shadow 0.2s; /* Animation for scaling and shadow */
+  cursor: pointer; /* Pointer on hover */
+  width: 250px; /* Fixed width for cards */
+  border: 1px solid #ccc; /* Optional: border for cards */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Initial shadow */
+  background-color: #fff; /* Background color for cards */
+}
+
+.producer-card:hover {
+  transform: scale(1.05); /* Scale on hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increased shadow on hover */
+}
+
+.producer-image {
+  height: 150px; /* Adjusted height for smaller images */
+  object-fit: cover; /* Maintain aspect ratio and cover */
+  border-radius: 8px 8px 0 0; /* Rounded corners for the image */
+}

@@ -5,8 +5,8 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-import UploadImage from '../Helpers/UploadImage';
-import { apiurl } from '../../Constants/Apiurl';
+import UploadImage from '../../Helpers/UploadImage';
+import { apiurl } from '../../../Constants/Apiurl';
 
 const AddMovieForm = () => {
   const [formValues, setFormValues] = useState({

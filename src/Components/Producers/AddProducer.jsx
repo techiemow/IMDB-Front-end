@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { TextField, Button, Typography, Container, MenuItem, Box, Stack, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { apiurl } from '../../Constants/Apiurl';
+import { apiurl } from '../../../Constants/Apiurl';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import UploadImage from '../Helpers/UploadImage';
+import UploadImage from '../../Helpers/UploadImage';
 import { MdDelete } from 'react-icons/md';
 
 const AddProducer = () => {

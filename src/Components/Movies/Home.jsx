@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { Fab } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-
-import Popularmovies from './Popularmovies';
 import DisplayMovies from './DisplayMovies';
+import Popularmovies from './Popularmovies';
+
+
 
 const Home = () => {
 
