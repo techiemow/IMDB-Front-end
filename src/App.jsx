@@ -13,10 +13,11 @@ import { useEffect, useState } from 'react';
 import IMDBContext from '../Context/Context';
 import { setLoading, setMovies,setError } from './Store/MovieReducer';
 import axios from 'axios';
-import { apiurl } from '../Constants/Apiurl';
+
 import { setActors, setActorLoading, setActorError } from './Store/ActorReducer';
 import { setProducerError, setProducerLoading, setProducers } from './Store/ProducerReducer';
 import Footer from './Components/Footer';
+import { apiurl } from '../Constants/Apiurl';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true); // Initialize loading state
@@ -26,6 +27,8 @@ function App() {
   const fetchMovies = async () => {
     dispatch(setLoading(true)); // Start loading
     try {
+      console.log(`${apiurl}/RecentMovies`);
+      
       const response = await axios.get(`${apiurl}/RecentMovies`, {
         withCredentials: true,
       });
