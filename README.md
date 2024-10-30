@@ -34,11 +34,4 @@ You can view the live application at [mmdbclone.netlify.app](https://mmdbclone.n
 
 - The application can utilize the TMDB API to fetch movie-related data. This is an optional feature that enhances the user experience by providing accurate and up-to-date movie information.
 
-## Installation
-
-To run this project locally, follow these steps:
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/imdb-clone.git
 
