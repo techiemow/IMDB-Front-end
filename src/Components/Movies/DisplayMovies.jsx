@@ -1,7 +1,7 @@
-import { Card, CardContent, CardMedia, Container, Typography, Grid, Button } from '@mui/material';
+import { Card, CardContent, CardMedia, Container, Typography, Button } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import "./DisplayMovies.css";
+import "./DisplayMovies.css"; // Create a CSS file for styling
 
 const DisplayMovies = () => {
   const movies = useSelector((state) => state.movies.movies);
@@ -26,37 +26,48 @@ const DisplayMovies = () => {
       <Typography variant="h4" align="center" gutterBottom>
         Recently Added Movies
       </Typography>
-      <Grid container spacing={2}>
-        {movies.map((movie, index) => (
-          <Grid item key={movie._id} xs={12} sm={6} md={4}>
-            <Card sx={{ maxWidth: 345, height: '100%' }} onClick={() => handleCardClick(movie._id)} style={{ cursor: 'pointer' }}>
-              <div style={{ position: "relative" }}>
-                {movie.movieImages.length > 0 && (
-                  <CardMedia
-                    sx={{ height: 275 }}
-                    image={movie.movieImages[movie.movieImages.length - 1]} // Display the last image
-                    title={`${movie.name} image`}
-                  />
-                )}
-            
-              </div>
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {movie.name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  <b>Plot: {movie.plot}</b>
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Release Date: {new Date(movie.releaseDate).toLocaleDateString()}
-                </Typography>
-                {/* Additional fields can be added here as needed */}
-              </CardContent>
-              <Button size="small" onClick={() => handleCardClick(movie._id)}>View Details</Button>
-            </Card>
-          </Grid>
+      <div className="movies-container">
+        {movies.map((movie) => (
+          <Card
+            className="movie-card"
+            key={movie._id}
+            onClick={() => handleCardClick(movie._id)}
+          >
+            {movie.movieImages.length > 0 && (
+              <CardMedia
+                component="img"
+                alt={`${movie.name} image`}
+                className="movie-image"
+                image={movie.movieImages[movie.movieImages.length - 1]} // Display the last image
+              />
+            )}
+            <CardContent className="card-content">
+              <Typography variant="h6" component="div">
+                {movie.name}
+              </Typography>
+              <Typography variant="body2" color="text.secondary " className="movie-plot mb-2">
+                <b>Plot: </b>{movie.plot}
+                <br />
+              
+              </Typography>
+              <Typography variant="body2" color="text.secondary" className='mb-2"'>
+                Release Date: {new Date(movie.releaseDate).toLocaleDateString()}
+              </Typography>
+            </CardContent>
+            <Button 
+              size="small" 
+              onClick={(e) => { 
+                e.stopPropagation(); // Prevent card click event
+                handleCardClick(movie._id);
+              }}
+              className="view-details-button"
+            >
+              View Details
+            </Button>
+            <br />
+          </Card>
         ))}
-      </Grid>
+      </div>
     </Container>
   );
 };

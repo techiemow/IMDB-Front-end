@@ -28,45 +28,47 @@ const DisplayActors = () => {
       <Typography variant="h4" align="center" gutterBottom>
         Featured Actors
       </Typography>
-      <Grid container spacing={2}>
+      <div className="actors-container">
         {actors.map((actor) => (
-          <Grid item key={actor._id} xs={12} sm={6} md={4}>
-            <Card 
-              sx={{ maxWidth: 345, height: '100%', display: 'flex', flexDirection: 'column', cursor: 'pointer' }}
-              onClick={() => handleCardClick(actor._id)}
+          <Card
+            className="actor-card"
+            key={actor._id}
+            onClick={() => handleCardClick(actor._id)}
+          >
+            {actor.ActorImages.length > 0 && (
+              <CardMedia
+                component="img"
+                alt={actor.name}
+                className="actor-image"
+                image={actor.ActorImages[0]}
+                title={`${actor.name} image`}
+              />
+            )}
+            <CardContent className="card-content">
+              <Typography gutterBottom variant="h5" component="div">
+                {actor.name}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" className="actor-bio">
+                <b>Bio:</b> {actor.bio}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                <b>Date of Birth:</b> {new Date(actor.dob).toLocaleDateString()}
+              </Typography>
+            </CardContent>
+            <Button 
+              style={{marginBottom:"20px"}}
+              size="small" 
+              onClick={(e) => { 
+                e.stopPropagation(); // Prevent card click event
+                handleCardClick(actor._id);
+              }}
+              className="view-details-button"
             >
-              <div style={{ position: "relative" }}>
-                {actor.ActorImages.length > 0 && (
-                  <CardMedia
-                    component="img"
-                    alt={actor.name}
-                    height="275"
-                    image={actor.ActorImages[0]}
-                    title={`${actor.name} image`}
-                    sx={{ objectFit: 'cover' }}
-                  />
-                )}
-              </div>
-              <CardContent sx={{ flexGrow: 1, pb: 0 }}> {/* Adjusted padding-bottom */}
-                <Typography gutterBottom variant="h5" component="div">
-                  {actor.name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  <b>Bio:</b> {actor.bio}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                  <b>Date of Birth:</b> {new Date(actor.dob).toLocaleDateString()}
-                </Typography>
-              </CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'center', pb: 2 }}> {/* Reduced padding-bottom */}
-                <Button size="small" onClick={() => handleCardClick(actor._id)}>
-                  View Details
-                </Button>
-              </Box>
-            </Card>
-          </Grid>
+              View Details
+            </Button>
+          </Card>
         ))}
-      </Grid>
+      </div>
     </Container>
   );
 };

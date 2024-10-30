@@ -1,15 +1,16 @@
 // src/components/ActorDetails.js
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Typography, Button, Box, Paper, Grid } from '@mui/material';
 import axios from 'axios';
 import { apiurl } from '../../../Constants/Apiurl';
+import IMDBContext from '../../../Context/Context';
 
 const ActorDetails = () => {
   const { id } = useParams(); // Get the actor ID from the URL
   const [actor, setActor] = useState(null);
   const navigate = useNavigate();
-  
+   const {fetchMovies} =  useContext( IMDBContext )
 
   useEffect(() => {
     // Fetch actor details from your API
@@ -17,6 +18,7 @@ const ActorDetails = () => {
       try {
         const response = await axios.get(`${apiurl}/actor/${id}`);
         const data = response.data;
+        console.log('Fetched Actor Data:', response.data); 
         setActor(data);
       } catch (error) {
         console.error("Error fetching actor details:", error);
@@ -24,6 +26,7 @@ const ActorDetails = () => {
     };
 
     fetchActorDetails();
+    fetchMovies();
   }, [id]);
 
   if (!actor) {

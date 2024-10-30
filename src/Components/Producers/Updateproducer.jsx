@@ -297,7 +297,7 @@ const UpdateProducer = () => {
             </div>
           ))}
         </div>
-        <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 2 }}>
+        <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 2 , mb:4 }}>
           <Button type="submit" variant="contained">
             Update Producer
           </Button>

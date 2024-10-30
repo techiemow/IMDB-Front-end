@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Typography, Button, Grid, CardMedia, Card, CardContent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import axios from 'axios';
 import { apiurl } from '../../../Constants/Apiurl';
+import IMDBContext from '../../../Context/Context';
 
 const ProducerDetails = () => {
     const { id } = useParams(); // Get the producer ID from the URL
     const [producer, setProducer] = useState(null);
     const navigate = useNavigate();
+
+    const {fetchMovies} = useContext(IMDBContext)
 
     useEffect(() => {
         const fetchProducerDetails = async () => {
@@ -19,7 +22,7 @@ const ProducerDetails = () => {
                 console.error("Error fetching producer details:", error);
             }
         };
-
+        fetchMovies();
         fetchProducerDetails();
     }, [id]);
 

@@ -182,7 +182,7 @@ const AddMovieForm = () => {
                     SelectProps={{ native: true }}
                     required
                   >
-                    <option value="" disabled>Select Gender</option>
+                    <option value="" disabled>Gender</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                     <option value="Other">Other</option>
@@ -255,7 +255,7 @@ const AddMovieForm = () => {
                   SelectProps={{ native: true }}
                   required
                 >
-                  <option value="" disabled>Select Gender</option>
+                  <option value="" disabled>Gender</option>
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
                   <option value="Other">Other</option>
