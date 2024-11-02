@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Typography, Button, Box, Paper } from '@mui/material';
 import axios from 'axios';
 import { apiurl } from '../../../Constants/Apiurl';
+import IMDBContext from '../../../Context/Context';
 
 const MovieDetails = () => {
   const { id } = useParams(); // Get the movie ID from the URL
   const [movie, setMovie] = useState(null);
   const navigate = useNavigate();
+   
+  const {fetchMovies,fetchActors,fetchProducers} = useContext(IMDBContext)
 
   useEffect(() => {
     // Fetch movie details from your API
@@ -15,12 +18,16 @@ const MovieDetails = () => {
       try {
         const response = await axios.get(`${apiurl}/movie/${id}`); // Adjust the URL as necessary
         const data = response.data;
+        console.log(data,"movie details");
+        
         setMovie(data);
       } catch (error) {
         console.error("Error fetching movie details:", error);
       }
     };
-
+    fetchProducers();
+    fetchActors();
+    fetchMovies();
     fetchMovieDetails();
   }, [id]);
 

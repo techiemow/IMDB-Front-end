@@ -15,10 +15,11 @@ const UpdateMovie = () => {
     releaseDate: '',
     plot: '',
     movieImages: [],
-    tmdbId: '',
+    tmdbId: "",
     actors: [],
-    producer: {},
+    producer: { ProducerImages: [] },
   });
+  
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -55,20 +56,29 @@ const UpdateMovie = () => {
     }
   }, [id]);
 
-  const handleUploadImage = async (event) => {
+  const handleUploadImage = async (event, field, index) => {
     const file = event.target.files[0];
     if (file) {
-      try {
-        const imageUrl = await UploadImage(file);
-        setFormValues((prev) => ({
-          ...prev,
-          movieImages: [...prev.movieImages, imageUrl]
-        }));
-      } catch (error) {
-        console.error("Upload failed", error);
-      }
+        try {
+            const imageUrl = await UploadImage(file);
+            setFormValues((prev) => {
+                const newState = { ...prev };
+                if (field === 'movieImages') {
+                    newState.movieImages.push(imageUrl);
+                } else if (field === 'actorImages') {
+                    newState.actors[index].ActorImages = [...(newState.actors[index].ActorImages || []), imageUrl];
+                } else if (field === 'producerImages') {
+                    newState.producer.ProducerImages = [...(newState.producer.ProducerImages || []), imageUrl];
+                }
+                return newState;
+            });
+        } catch (error) {
+            console.error("Upload failed", error);
+            toast.error("Image upload failed. Please try again.");
+        }
     }
-  };
+};
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -175,19 +185,35 @@ const UpdateMovie = () => {
               required
             />
           </Grid>
-          <Grid item xs={12}>
+     
+           {/* Movie Images Section */}
+           <Grid item xs={12}>
+            <Typography variant="h6">Movie Images</Typography>
             <input
-              accept="image/*"
-              style={{ display: 'none' }}
-              id="upload-image"
               type="file"
-              onChange={handleUploadImage}
+              onChange={(e) => handleUploadImage(e, 'movieImages')}
+              style={{ display: 'none' }}
+              id="movie-image-upload"
             />
-            <label htmlFor="upload-image">
+            <label htmlFor="movie-image-upload">
               <Button variant="contained" component="span">
                 Upload Movie Image
               </Button>
             </label>
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+              {formValues.movieImages.map((image, i) => (
+                <div key={i} style={{ position: 'relative', margin: '10px' }}>
+                  <img src={image} alt={`Movie ${i}`} style={{ width: '100px', height: '100px' }} />
+                  <MdDelete
+                    style={{ position: 'absolute', top: 0, right: 0, cursor: 'pointer' }}
+                    onClick={() => {
+                      const updatedImages = formValues.movieImages.filter((_, idx) => idx !== i);
+                      setFormValues({ ...formValues, movieImages: updatedImages });
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
           </Grid>
 
           <Grid item xs={12}>
@@ -213,7 +239,7 @@ const UpdateMovie = () => {
                     SelectProps={{ native: true }}
                     required
                   >
-                    <option value="" disabled>Select Gender</option>
+                    <option value="" disabled>Gender</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                     <option value="Other">Other</option>
@@ -242,6 +268,34 @@ const UpdateMovie = () => {
                     value={actor.bio || ''}
                     onChange={(e) => handleActorChange(index, 'bio', e.target.value)}
                   />
+                </Grid>
+                <Grid item xs={12}>
+                  <input
+                    type="file"
+                    onChange={(e) => handleUploadImage(e, 'actorImages', index)}
+                    style={{ display: 'none' }}
+                    id={`actor-image-upload-${index}`}
+                  />
+                  <label htmlFor={`actor-image-upload-${index}`}>
+                    <Button variant="contained" component="span">
+                      Upload Actor Image
+                    </Button>
+                  </label>
+                  <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                    {(actor.ActorImages || []).map((image, i) => (
+                      <div key={i} style={{ position: 'relative', margin: '10px' }}>
+                        <img src={image} alt={`Actor ${i}`} style={{ width: '100px', height: '100px' }} />
+                        <MdDelete
+                          style={{ position: 'absolute', top: 0, right: 0, cursor: 'pointer' }}
+                          onClick={() => {
+                            const updatedActors = [...formValues.actors];
+                            updatedActors[index].ActorImages = updatedActors[index].ActorImages.filter((_, idx) => idx !== i);
+                            setFormValues({ ...formValues, actors: updatedActors });
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </Grid>
 
                 <Grid item xs={12}>
@@ -284,7 +338,7 @@ const UpdateMovie = () => {
                   SelectProps={{ native: true }}
                   required
                 >
-                  <option value="" disabled>Select Gender</option>
+                  <option value="" disabled>Gender</option>
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
                   <option value="Other">Other</option>
@@ -306,6 +360,8 @@ const UpdateMovie = () => {
               </Grid>
 
 
+
+
               <Grid item xs={12}>
                 <TextField
                   label="Bio"
@@ -317,10 +373,40 @@ const UpdateMovie = () => {
                   variant="outlined"
                 />
               </Grid>
+              <Grid item xs={12}>
+                <input
+                  type="file"
+                  onChange={(e) => handleUploadImage(e, 'producerImages')}
+                  style={{ display: 'none' }}
+                  id="producer-image-upload"
+                />
+                <label htmlFor="producer-image-upload">
+                  <Button variant="contained" component="span">
+                    Upload Producer Image
+                  </Button>
+                </label>
+                <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                  {(formValues?.producer?.ProducerImages || []).map((image, i) => (
+                    <div key={i} style={{ position: 'relative', margin: '10px' }}>
+                      <img src={image} alt={`Producer ${i}`} style={{ width: '100px', height: '100px' }} />
+                      <MdDelete
+                        style={{ position: 'absolute', top: 0, right: 0, cursor: 'pointer' }}
+                        onClick={() => {
+                          const updatedImages = formValues.producer.ProducerImages.filter((_, idx) => idx !== i);
+                          setFormValues({ ...formValues, producer: { ...formValues.producer, ProducerImages: updatedImages } });
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </Grid>
             </Grid>
           </Grid>
 
           <Grid item xs={12} >
+            <Button variant="outlined" color="error" style={{marginRight:"20px"}} onClick={()=>{navigate("/")}}>
+              Cancel
+            </Button>
             <Button type="submit" variant="contained" color="primary">
               Update Movie
             </Button>

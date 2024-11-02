@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import logo from "../assets/logo.png";
@@ -7,11 +7,15 @@ import SearchIcon from '@mui/icons-material/Search';
 import { toast } from 'react-toastify';
 import { apiurl } from '../../Constants/Apiurl';
 import { Button, Grid } from '@mui/material';
+import IMDBContext from '../../Context/Context';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const User = localStorage.getItem('usertoken');
+  const{fetchMovies,
+    fetchActors,
+    fetchProducers} = useContext(IMDBContext)
 
   const handleLogoClick = () => {
     navigate('/');
@@ -36,6 +40,12 @@ const Navbar = () => {
       navigate(`/search?query=${encodeURIComponent(search)}`);
     }
   };
+
+  useEffect(() =>{
+    fetchMovies();
+    fetchActors();
+    fetchProducers();
+  } , [])
 
   return (
     <>
@@ -74,17 +84,24 @@ const Navbar = () => {
 
 <Grid container justifyContent={"center"} columnSpacing={3} spacing={2} style={{marginBottom:"12px", marginTop:"6px"}}>
   <Grid item>
-    <Button variant="text" onClick={() => { navigate("/") }} className="hover:bg-gray-200 transition-colors duration-200 rounded-md p-2">
+    <Button variant="text" onClick={() => {     fetchMovies();
+    fetchActors();
+    fetchProducers(); navigate("/") }} className="hover:bg-gray-200 transition-colors duration-200 rounded-md p-2">
       Movies
     </Button>
   </Grid>
   <Grid item>
-    <Button variant="text" onClick={() => { navigate("/ActorsHome") }} className="hover:bg-gray-200 transition-colors duration-200 rounded-md p-2">
+    <Button variant="text" onClick={() => {    fetchMovies();
+    fetchActors();
+    fetchProducers(); navigate("/ActorsHome") }} className="hover:bg-gray-200 transition-colors duration-200 rounded-md p-2">
       Actors
     </Button>
   </Grid>
   <Grid item>
-    <Button variant="text" onClick={() => { navigate("/ProducersHome") }} className="hover:bg-gray-200 transition-colors duration-200 rounded-md p-2">
+    <Button variant="text" onClick={() => {     fetchMovies();
+    fetchActors();
+    fetchProducers();
+    navigate("/ProducersHome") }} className="hover:bg-gray-200 transition-colors duration-200 rounded-md p-2">
       Producers
     </Button>
   </Grid>

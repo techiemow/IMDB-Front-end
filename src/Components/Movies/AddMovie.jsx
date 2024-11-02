@@ -4,7 +4,6 @@ import { MdDelete } from "react-icons/md";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-
 import UploadImage from '../../Helpers/UploadImage';
 import { apiurl } from '../../../Constants/Apiurl';
 import IMDBContext from '../../../Context/Context';
@@ -15,67 +14,73 @@ const AddMovieForm = () => {
     releaseDate: '',
     plot: '',
     movieImages: [],
-    tmdbId: "", // Initially empty, will be set on mount
-    actors: [], // Array of actor objects
-    producer: {}, // Single producer object
+    tmdbId: "",
+    actors: [],
+    producer: { ProducerImages: [] },
   });
 
   const navigate = useNavigate();
+  const { fetchMovies ,fetchProducers,fetchActors } = useContext(IMDBContext);
 
-  const { fetchMovies } = useContext(IMDBContext);
-  
+  const generateRandomTmdbId = () => Math.floor(100000 + Math.random() * 900000);
 
-  // Function to generate a random TMDB ID
-  const generateRandomTmdbId = () => {
-    return Math.floor(100000 + Math.random() * 900000); // Generates a random 6-digit number
-  };
-
-  // Set the initial tmdbId on component mount
   useEffect(() => {
-    setFormValues((prev) => ({
-      ...prev,
-      tmdbId: generateRandomTmdbId() // Set a random TMDB ID
-    }));
-  }, []); // Empty dependency array means this runs once on mount
+    setFormValues((prev) => ({ ...prev, tmdbId: generateRandomTmdbId() }));
+  }, []);
 
-  const handleUploadImage = async (event) => {
+  const handleUploadImage = async (event, field, index) => {
     const file = event.target.files[0];
     if (file) {
       try {
         const imageUrl = await UploadImage(file);
-        setFormValues((prev) => ({
-          ...prev,
-          movieImages: [...prev.movieImages, imageUrl]
-        }));
+        setFormValues((prev) => {
+          if (field === 'movieImages') {
+            return { ...prev, movieImages: [...prev.movieImages, imageUrl] };
+          } else if (field === 'actorImages') {
+            const newActors = [...prev.actors];
+            newActors[index].ActorImages = [...(newActors[index].ActorImages || []), imageUrl];
+            return { ...prev, actors: newActors };
+          } else if (field === 'producerImages') {
+            return {
+              ...prev,
+              producer: { ...prev.producer, ProducerImages: [...(prev.producer.ProducerImages || []), imageUrl] },
+            };
+          }
+          return prev;
+        });
       } catch (error) {
         console.error("Upload failed", error);
+        toast.error("Image upload failed. Please try again.");
       }
     }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log(formValues);
+    
     try {
       const response = await axios.post(`${apiurl}/AddMovie`, formValues, {
         withCredentials: true,
       });
-
       if (response.data.success) {
+        console.log(response.data);
+        
         toast.success(response.data.message);
-        // Reset form values, including generating a new TMDB ID
         setFormValues({
           name: '',
           releaseDate: '',
           plot: '',
           movieImages: [],
-          tmdbId: generateRandomTmdbId(), // Generate a new ID for the next movie
+          tmdbId: generateRandomTmdbId(),
           actors: [],
-          producer: {},
+          producer: { ProducerImages: [] },
         });
-        
         fetchMovies();
-        navigate("/");
+        fetchActors(); 
+    fetchProducers();
 
+        navigate("/");
       } else {
         toast.error('Error adding the movie. Please try again later.');
       }
@@ -92,12 +97,11 @@ const AddMovieForm = () => {
   };
 
   const handleAddActor = () => {
-    setFormValues({ ...formValues, actors: [...formValues.actors, {}] });
+    setFormValues({ ...formValues, actors: [...formValues.actors, { ActorImages: [] }] });
   };
 
   const handleRemoveActor = (index) => {
-    const newActors = formValues.actors.filter((_, i) => i !== index);
-    setFormValues({ ...formValues, actors: newActors });
+    setFormValues({ ...formValues, actors: formValues.actors.filter((_, i) => i !== index) });
   };
 
   const handleProducerChange = (field, value) => {
@@ -105,7 +109,7 @@ const AddMovieForm = () => {
   };
 
   return (
-    <Container maxWidth="md" style={{marginBottom:"20px"}}>
+    <Container maxWidth="md" sx={{ mb: 3 }}>
       <Typography variant="h4" align="center" gutterBottom>
         Add a New Movie
       </Typography>
@@ -123,12 +127,11 @@ const AddMovieForm = () => {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              label="tmdbId"
+              label="TMDB ID"
               variant="outlined"
               fullWidth
               value={formValues.tmdbId}
-              // Remove the onChange here to prevent overwriting the TMDB ID
-              disabled // Optional: Disable this field to prevent manual edits
+              disabled
               required
             />
           </Grid>
@@ -156,7 +159,6 @@ const AddMovieForm = () => {
               required
             />
           </Grid>
-          {/* Actors Section */}
           <Grid item xs={12}>
             <Typography variant="h6">Actors</Typography>
             {formValues.actors.map((actor, index) => (
@@ -212,24 +214,45 @@ const AddMovieForm = () => {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    onClick={() => handleRemoveActor(index)}
-                  >
+                  <input
+                    type="file"
+                    onChange={(e) => handleUploadImage(e, 'actorImages', index)}
+                    style={{ display: 'none' }}
+                    id={`actor-image-upload-${index}`}
+                  />
+                  <label htmlFor={`actor-image-upload-${index}`}>
+                    <Button variant="contained" component="span">
+                      Upload Actor Image
+                    </Button>
+                  </label>
+                  <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                    {(actor.ActorImages || []).map((image, i) => (
+                      <div key={i} style={{ position: 'relative', margin: '10px' }}>
+                        <img src={image} alt={`Actor ${i}`} style={{ width: '100px', height: '100px' }} />
+                        <MdDelete
+                          style={{ position: 'absolute', top: 0, right: 0, cursor: 'pointer' }}
+                          onClick={() => {
+                            const updatedActors = [...formValues.actors];
+                            updatedActors[index].ActorImages = updatedActors[index].ActorImages.filter((_, idx) => idx !== i);
+                            setFormValues({ ...formValues, actors: updatedActors });
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </Grid>
+                <Grid item xs={12}>
+                  <Button variant="outlined" color="error" onClick={() => handleRemoveActor(index)}>
                     Remove Actor
                   </Button>
                 </Grid>
               </Grid>
             ))}
-            <Button
-              variant="contained"
-              onClick={handleAddActor}
-              sx={{ mt: 2 }}
-            >
+            <Button variant="contained" onClick={handleAddActor} sx={{ mt: 2 }}>
               Add Actor
             </Button>
           </Grid>
+
           {/* Producer Section */}
           <Grid item xs={12}>
             <Typography variant="h6">Producer</Typography>
@@ -284,47 +307,69 @@ const AddMovieForm = () => {
                   onChange={(e) => handleProducerChange('bio', e.target.value)}
                 />
               </Grid>
+              <Grid item xs={12}>
+                <input
+                  type="file"
+                  onChange={(e) => handleUploadImage(e, 'producerImages')}
+                  style={{ display: 'none' }}
+                  id="producer-image-upload"
+                />
+                <label htmlFor="producer-image-upload">
+                  <Button variant="contained" component="span">
+                    Upload Producer Image
+                  </Button>
+                </label>
+                <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                  {(formValues.producer.ProducerImages || []).map((image, i) => (
+                    <div key={i} style={{ position: 'relative', margin: '10px' }}>
+                      <img src={image} alt={`Producer ${i}`} style={{ width: '100px', height: '100px' }} />
+                      <MdDelete
+                        style={{ position: 'absolute', top: 0, right: 0, cursor: 'pointer' }}
+                        onClick={() => {
+                          const updatedImages = formValues.producer.ProducerImages.filter((_, idx) => idx !== i);
+                          setFormValues({ ...formValues, producer: { ...formValues.producer, ProducerImages: updatedImages } });
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </Grid>
             </Grid>
           </Grid>
+
           {/* Movie Images Section */}
           <Grid item xs={12}>
+            <Typography variant="h6">Movie Images</Typography>
             <input
-              id="movieImages"
-              name="movieImages"
               type="file"
-              multiple
-              onChange={handleUploadImage}
+              onChange={(e) => handleUploadImage(e, 'movieImages')}
               style={{ display: 'none' }}
+              id="movie-image-upload"
             />
-            <label htmlFor="movieImages">
+            <label htmlFor="movie-image-upload">
               <Button variant="contained" component="span">
-                Upload Movie Images
+                Upload Movie Image
               </Button>
             </label>
-            <div className="image-container" style={{ display: 'flex', flexWrap: 'wrap' }}>
-              {formValues.movieImages.map((el, index) => (
-                <div className="image-wrapper" key={index} style={{ position: 'relative', marginRight: '10px' }}>
-                  <img src={el} alt={`Movie ${index}`} style={{ width: '100px', height: '100px' }} />
-                  <div
-                    className="delete-icon"
-                    onClick={() => setFormValues({
-                      ...formValues,
-                      movieImages: formValues.movieImages.filter((_, i) => i !== index),
-                    })}
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+              {formValues.movieImages.map((image, i) => (
+                <div key={i} style={{ position: 'relative', margin: '10px' }}>
+                  <img src={image} alt={`Movie ${i}`} style={{ width: '100px', height: '100px' }} />
+                  <MdDelete
                     style={{ position: 'absolute', top: 0, right: 0, cursor: 'pointer' }}
-                  >
-                    <MdDelete />
-                  </div>
+                    onClick={() => {
+                      const updatedImages = formValues.movieImages.filter((_, idx) => idx !== i);
+                      setFormValues({ ...formValues, movieImages: updatedImages });
+                    }}
+                  />
                 </div>
               ))}
             </div>
           </Grid>
-          <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary" >
-              Add Movie
-            </Button>
-            <Button style={{margin:"10px"}} variant="contained"  color="error" onClick={()=>{navigate("/")}}>
-              Cancel
+
+          <Grid item xs={12} style={{ textAlign: 'center' }}>
+            <Button type="submit" variant="contained" color="primary" fullWidth>
+              Submit
             </Button>
           </Grid>
         </Grid>

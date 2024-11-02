@@ -128,7 +128,7 @@ const UpdateProducer = () => {
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" style={{marginBottom:"10px"}}>
     <Box sx={{ mt: 5 }}>
       <Typography variant="h4" align="center" gutterBottom>
         Update Producer
@@ -171,7 +171,7 @@ const UpdateProducer = () => {
 
         <Typography variant="h6">Movies</Typography>
         {formValues.movies.map((movie, index) => (
-          <Grid container spacing={2} key={index}>
+          <Grid container spacing={2} key={index} style={{marginBottom:"25px"}}> 
             <Grid item xs={6}>
               <TextField
                 label="Movie Name"
