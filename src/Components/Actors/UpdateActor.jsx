@@ -73,7 +73,7 @@ const UpdateActor = () => {
       updatedMovies[index] = updatedMovie;
       const newState = { ...prev, movies: updatedMovies };
       console.log("Updated movies:", newState.movies); 
-      
+
       return newState;
     });
   };
@@ -184,8 +184,6 @@ const UpdateActor = () => {
               onChange={handleChange}
               fullWidth
             />
-
-            {console.log(actorData.dob)}
           </Grid>
 
           <Grid item xs={12}>
