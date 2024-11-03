@@ -19,10 +19,8 @@ const AddProducer = () => {
   });
 
   const navigate = useNavigate();
+  const { fetchProducers } = useContext(IMDBContext);
 
-  const {fetchProducers} = useContext(IMDBContext)
-
-  // Function to handle image upload
   const handleUploadImage = async (event, type, index) => {
     const file = event.target.files[0];
     if (file) {
@@ -31,11 +29,11 @@ const AddProducer = () => {
         if (type === 'producer') {
           setFormValues((prev) => ({
             ...prev,
-            ProducerImages: [...prev.ProducerImages, imageUrl], // Fixed reference here
+            ProducerImages: [...prev.ProducerImages, imageUrl],
           }));
         } else if (type === 'movie') {
           const updatedMovies = [...formValues.movies];
-          updatedMovies[index].movieImages.push(imageUrl); // Add the new movie image URL
+          updatedMovies[index].movieImages.push(imageUrl);
           setFormValues((prev) => ({
             ...prev,
             movies: updatedMovies,
@@ -47,7 +45,6 @@ const AddProducer = () => {
     }
   };
 
-  // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -66,7 +63,7 @@ const AddProducer = () => {
           movies: [{ name: '', releaseDate: '', plot: '', movieImages: [] }],
         });
         navigate("/ProducersHome");
-        fetchProducers()
+        fetchProducers();
       } else {
         toast.error('Error adding the producer. Please try again later.');
       }
@@ -94,14 +91,13 @@ const AddProducer = () => {
     setFormValues((prev) => ({ ...prev, movies: updatedMovies }));
   };
 
-  // Function to handle Cancel button click
   const handleCancel = () => {
     navigate('/ProducersHome');
   };
 
   return (
     <Container maxWidth="sm">
-      <Box sx={{ mt: 5,  mb:5 }}>
+      <Box sx={{ mt: 5, mb: 5 }}>
         <Typography variant="h4" align="center" gutterBottom>
           Add New Producer
         </Typography>
