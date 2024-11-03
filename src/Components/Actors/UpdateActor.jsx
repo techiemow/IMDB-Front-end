@@ -14,7 +14,7 @@ const UpdateActor = () => {
   const { id } = useParams(); // Get actor ID from URL parameters
   const navigate = useNavigate();
   const { fetchActors } = useContext(IMDBContext);
-  
+
   // State for actor data
   const [actorData, setActorData] = useState({
     name: '',
@@ -38,6 +38,8 @@ const UpdateActor = () => {
             releaseDate: moment(movie.releaseDate).format('YYYY-MM-DD'), // Format the date
           })),
         };
+
+
         setActorData(formattedData); // Populate form with existing data
       } catch (error) {
         console.error('Error fetching actor data:', error);
@@ -47,11 +49,36 @@ const UpdateActor = () => {
     fetchActorData();
   }, [id]);
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setActorData((prev) => ({ ...prev, [name]: value }));
+
+    // If the field is for the date of birth, ensure you're capturing the new date correctly
+    if (name === "dob") {
+      setActorData((prev) => ({
+        ...prev,
+        dob: value, // Ensure value is being set correctly
+      }));
+      console.log("Updated dob:", value); // Debug log to check the value being set
+    } else {
+      setActorData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
+
+  const handleMovieChange = (index, updatedMovie) => {
+    setActorData((prev) => {
+      const updatedMovies = [...prev.movies];
+      updatedMovies[index] = updatedMovie;
+      const newState = { ...prev, movies: updatedMovies };
+      console.log("Updated movies:", newState.movies); 
+      
+      return newState;
+    });
+  };
+
+
 
   // Function to handle image upload
   const handleUploadImage = async (event, type, index) => {
@@ -101,11 +128,7 @@ const UpdateActor = () => {
   };
 
   // Handle movie change
-  const handleMovieChange = (index, updatedMovie) => {
-    const updatedMovies = [...actorData.movies];
-    updatedMovies[index] = updatedMovie;
-    setActorData((prev) => ({ ...prev, movies: updatedMovies }));
-  };
+
 
   const addMovie = () => {
     setActorData((prev) => ({
@@ -156,13 +179,15 @@ const UpdateActor = () => {
             <TextField
               label="Date of Birth"
               type="date"
-              InputLabelProps={{ shrink: true }}
-              fullWidth
-              value={actorData.dob}
+              name="dob"
+              value={actorData.dob} 
               onChange={handleChange}
-              required
+              fullWidth
             />
+
+            {console.log(actorData.dob)}
           </Grid>
+
           <Grid item xs={12}>
             <Typography variant="h6">Movies</Typography>
             {actorData.movies.map((movie, index) => (
@@ -285,8 +310,8 @@ const UpdateActor = () => {
               ))}
             </div>
           </Grid>
-          <Grid item xs={12} style={{marginBottom:"20px"}}>
-            <Button variant="outlined" color="error " onClick={()=>{navigate("/ActorsHome")}} style={{marginRight:"50px"}}>
+          <Grid item xs={12} style={{ marginBottom: "20px" }}>
+            <Button variant="outlined" color="error " onClick={() => { navigate("/ActorsHome") }} style={{ marginRight: "50px" }}>
               Cancel
             </Button>
             <Button type="submit" variant="contained" color="primary">
