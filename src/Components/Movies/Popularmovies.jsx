@@ -8,34 +8,22 @@ import {
   CircularProgress,
   Box,
   Grid,
+  Button,
 } from '@mui/material';
 import { styled } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
 
 const StyledCard = styled(Card)(({ theme }) => ({
-    backgroundColor: '#f5f5f5',
-    transition: 'transform 0.2s, box-shadow 0.2s',
-    display: 'flex',
-    flexDirection: 'column',
-    cursor: 'pointer',
-    height: '500px', // Set a fixed height for the card
-    '&:hover': {
-      transform: 'scale(1.05)',
-    },
-  }));
-  
-  const OverviewText = styled(Typography)(({ theme }) => ({
-    display: '-webkit-box',
-    WebkitBoxOrient: 'vertical',
-    overflow: 'hidden',
-    WebkitLineClamp: 5, // Limit to 5 lines
-    height: '80px', // Adjust height to fit 5 lines approximately
-  }));
-
-const Poster = styled(CardMedia)(({ theme }) => ({
-  width: '70%', // Make the poster full width
-  height: "60%", // Auto height to maintain aspect ratio
-  objectFit: 'cover', // Ensure image covers the space
+  backgroundColor: '#f5f5f5',
+  transition: 'transform 0.2s, box-shadow 0.2s',
+  display: 'flex',
+  flexDirection: 'column',
+  textAlign: 'center',
+  cursor: 'pointer',
+  height: '550px',
+  '&:hover': {
+    transform: 'scale(1.05)',
+  },
 }));
 
 const Popularmovies = () => {
@@ -45,53 +33,43 @@ const Popularmovies = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchPopularMovies = async () => {
+    const fetchMovies = async () => {
       try {
         const response = await axios.get(
-          `https://api.themoviedb.org/3/movie/popular?api_key=0271e07fb7d5c0183c6e21f0a2a0932a&language=en-US&page=1`
+          `https://www.omdbapi.com/?apikey=fd0b95eb&s=marvel`
         );
-        const movieDetails = await Promise.all(
-          response.data.results.map(async (movie) => {
-            try {
-              const detailsResponse = await axios.get(
-                `https://api.themoviedb.org/3/movie/${movie.id}?api_key=0271e07fb7d5c0183c6e21f0a2a0932a&language=en-US`
-              );
-
-              return {
-                id: movie.id,
-                title: movie.title,
-                Overview: movie.overview,
-                release_date: movie.release_date,
-                poster_path: movie.poster_path,
-                Rating: movie.vote_average,
-              };
-            } catch (detailsError) {
-              console.error(`Error fetching details for movie ID ${movie.id}:`, detailsError);
-              return {
-                id: movie.id,
-                title: movie.title,
-                release_date: movie.release_date,
-                poster_path: movie.poster_path,
-                Overview: 'N/A',
-                Rating: 'N/A',
-              };
-            }
-          })
-        );
-        setMovies(movieDetails);
+        if (response.data.Response === 'True') {
+          setMovies(response.data.Search);
+        } else {
+          setError(response.data.Error);
+        }
       } catch (err) {
-        console.error(err);
-        setError(err.response ? err.response.data.status_message : 'Failed to fetch movies');
+        setError('Failed to fetch movies.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPopularMovies();
+    fetchMovies();
   }, []);
 
+  const addToFavorites = (movie) => {
+    const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    if (!favorites.some((fav) => fav.imdbID === movie.imdbID)) {
+      favorites.push(movie);
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+      alert(`${movie.Title} added to favorites!`);
+    } else {
+      alert(`${movie.Title} is already in favorites.`);
+    }
+  };
+
+  const handleCardClick = (movieId) => {
+    navigate(`/PopularMovieDetails/${movieId}`); // Redirect to the specific movie's details page
+  };
+
   if (loading) return <CircularProgress />;
-  if (error) return <div>{error}</div>;
+  if (error) return <Typography>{error}</Typography>;
 
   return (
     <Box sx={{ padding: 2 }}>
@@ -100,27 +78,35 @@ const Popularmovies = () => {
       </Typography>
       <Grid container spacing={2}>
         {movies.map((movie) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={movie.id}>
-            <StyledCard onClick={() => navigate(`/PopularMovieDetails/${movie.id}`)}> {/* Navigate on click */}
+          <Grid item xs={12} sm={6} md={4} lg={3} key={movie.imdbID}>
+            <StyledCard onClick={() => handleCardClick(movie.imdbID)}>
               <Typography variant="h6" align="center" gutterBottom>
-                {movie.title}
+                {movie.Title}
               </Typography>
-              <Poster
+              <CardMedia
                 component="img"
-                className='px-6'
-                image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                alt={movie.title}
+                image={movie.Poster}
+                alt={movie.Title}
+                sx={{ height: 300 }}
               />
               <CardContent>
-                <Typography variant="body2" className='py-2' color="text.secondary">
-                  Release Date: {movie.release_date}
+                <Typography variant="body2" color="text.secondary">
+                  Release Date: {movie.Year}
                 </Typography>
-                <OverviewText variant="body2" color="text.secondary">
-                  Plot : {movie.Overview || 'N/A'}
-                </OverviewText>
-                <Typography variant="body2" className='py-2' color="text.secondary">
-                  Rating: {movie.Rating || 'N/A'}
+                <Typography variant="body2" color="text.secondary" sx={{ marginTop: 1 }}>
+                  Plot: {movie.Plot || 'No plot available'}
                 </Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent card click from firing
+                    addToFavorites(movie);
+                  }}
+                  sx={{ marginTop: 2 }}
+                >
+                  Add to Favorites
+                </Button>
               </CardContent>
             </StyledCard>
           </Grid>
