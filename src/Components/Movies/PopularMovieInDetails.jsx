@@ -84,6 +84,14 @@ const PopularMovieInDetails = () => {
                   <TableCell>{movie.Plot}</TableCell>
                 </TableRow>
                 <TableRow>
+                  <TableCell>Genre</TableCell>
+                  <TableCell>{movie.Genre}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Runtime</TableCell>
+                  <TableCell>{movie.Runtime}</TableCell>
+                </TableRow>
+                <TableRow>
                   <TableCell>Director</TableCell>
                   <TableCell>{movie.Director}</TableCell>
                 </TableRow>
@@ -92,8 +100,24 @@ const PopularMovieInDetails = () => {
                   <TableCell>{movie.Actors}</TableCell>
                 </TableRow>
                 <TableRow>
+                  <TableCell>Language</TableCell>
+                  <TableCell>{movie.Language}</TableCell>
+                </TableRow>
+                <TableRow>
                   <TableCell>Release Date</TableCell>
                   <TableCell>{movie.Released}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>IMDB Rating</TableCell>
+                  <TableCell>{movie.imdbRating}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Box Office</TableCell>
+                  <TableCell>{movie.BoxOffice || 'N/A'}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Awards</TableCell>
+                  <TableCell>{movie.Awards}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>

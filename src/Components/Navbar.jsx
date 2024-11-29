@@ -68,29 +68,29 @@ const Navbar = () => {
             </div>
           </div>
           <div className="flex items-center gap-7">
-          {
-                                User && (
-                                    <div className='text-3xl cursor-pointer relative flex justify-center mix-blend-multiply' onClick={() => setMenuDisplay(preve => !preve)}>
-                                        <Avatar src="/broken-image.jpg" />
-                                    </div>
-                                )
+            {
+              User && (
+                <div className='text-3xl cursor-pointer relative flex justify-center mix-blend-multiply' onClick={() => setMenuDisplay(preve => !preve)}>
+                  <Avatar src="/broken-image.jpg" />
+                </div>
+              )
 
-                            }
+            }
 
 
-                            
-{
-                                menuDisplay && (
-                                    <div className='absolute bg-white bottom-0 top-11 h-fit p-2 shadow-lg rounded' >
-                                        <nav>
-                                     
-                                            <Link to={"/favorites"} className='whitespace-nowrap hidden md:block hover:bg-slate-100 p-2'onClick={() => setMenuDisplay(preve => !preve)}>My Favorites</Link>
-                                        
 
-                                        </nav>
-                                    </div>
-                                )
-                            }
+            {
+              menuDisplay && (
+                <div className='absolute bg-white bottom-0 top-11 h-fit p-2 shadow-lg rounded' >
+                  <nav>
+
+                    <Link to={"/favorites"} className='whitespace-nowrap hidden md:block hover:bg-slate-100 p-2' onClick={() => setMenuDisplay(preve => !preve)}>My Favorites</Link>
+
+
+                  </nav>
+                </div>
+              )
+            }
             {User ? (
               <button className="bg-red-500 text-white p-2 rounded-md transition-colors duration-200 hover:bg-red-600" onClick={handleLogout}>
                 Logout
