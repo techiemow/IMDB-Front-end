@@ -78,7 +78,16 @@ const SearchResults = () => {
                 image={movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/300x450?text=No+Image'}
                 alt={movie.Title}
               />
-              <CardContent>
+              <CardContent
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center', // Center content vertically
+                  alignItems: 'center',      // Center content horizontally
+                  textAlign: 'center',       // Center text
+                  flexGrow: 1,               // Allow content to grow and center within card
+                }}
+              >
                 <Typography variant="h6" noWrap>
                   {movie.Title}
                 </Typography>
@@ -86,7 +95,13 @@ const SearchResults = () => {
                   {movie.Year}
                 </Typography>
               </CardContent>
-              <CardActions>
+              <CardActions
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center', // Center button horizontally
+                  alignItems: 'center',      // Center button vertically
+                }}
+              >
                 <Button
                   component={Link}
                   to={`/PopularMovieDetails/${movie.imdbID}`}

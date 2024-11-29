@@ -84,7 +84,7 @@ const FavoriteMovies = () => {
                 image={movie.Poster}
                 alt={movie.Title}
                 sx={{
-                  height: 250,
+                  height: "auto",
                   width: "100%",
                   objectFit: "cover",
                 }}

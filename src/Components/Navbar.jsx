@@ -11,12 +11,10 @@ import IMDBContext from '../../Context/Context';
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const [menuDisplay, setMenuDisplay] = useState(false)
+  const [menuDisplay, setMenuDisplay] = useState(false);
   const [search, setSearch] = useState('');
   const User = localStorage.getItem('usertoken');
-  const { fetchMovies,
-    fetchActors,
-    fetchProducers } = useContext(IMDBContext)
+  const { fetchMovies, fetchActors, fetchProducers } = useContext(IMDBContext);
 
   const handleLogoClick = () => {
     navigate('/');
@@ -39,6 +37,13 @@ const Navbar = () => {
   const handleSearch = () => {
     if (search.trim()) {
       navigate(`/search?query=${encodeURIComponent(search)}`);
+      setSearch(''); // Clear the search field
+    }
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      handleSearch();
     }
   };
 
@@ -46,11 +51,11 @@ const Navbar = () => {
     fetchMovies();
     fetchActors();
     fetchProducers();
-  }, [])
+  }, []);
 
   return (
     <>
-      <header className="h-20 shadow-md  w-full gap-y-10 py-4 bg-orange-200">
+      <header className="h-20 shadow-md w-full gap-y-10 py-4 bg-orange-200">
         <div className="container mx-auto flex items-center px-10 pb-4 h-full justify-between">
           <div className="flex items-center" style={{ marginTop: '10px' }}>
             <img src={logo} alt="Logo" className="h-20 w-20 cursor-pointer" onClick={handleLogoClick} />
@@ -61,38 +66,44 @@ const Navbar = () => {
               className="w-full outline-none"
               onChange={(e) => setSearch(e.target.value)}
               value={search}
-              variant="outlined" // Added variant for a better look
+              variant="outlined"
+              onKeyDown={handleKeyDown} // Handle Enter key
             />
-            <div className="w-13 min-w-[50px] h-14 bg-blue-500 flex items-center justify-center rounded-l-sm cursor-pointer transition-transform duration-200 hover:scale-105" onClick={handleSearch}>
+            <div
+              className="w-13 min-w-[50px] h-14 bg-blue-500 flex items-center justify-center rounded-l-sm cursor-pointer transition-transform duration-200 hover:scale-105"
+              onClick={handleSearch}
+            >
               <SearchIcon className="text-white" />
             </div>
           </div>
           <div className="flex items-center gap-7">
-            {
-              User && (
-                <div className='text-3xl cursor-pointer relative flex justify-center mix-blend-multiply' onClick={() => setMenuDisplay(preve => !preve)}>
-                  <Avatar src="/broken-image.jpg" />
-                </div>
-              )
+            {User && (
+              <div
+                className="text-3xl cursor-pointer relative flex justify-center mix-blend-multiply"
+                onClick={() => setMenuDisplay((prev) => !prev)}
+              >
+                <Avatar src="/broken-image.jpg" />
+              </div>
+            )}
 
-            }
-
-
-
-            {
-              menuDisplay && (
-                <div className='absolute bg-white bottom-0 top-11 h-fit p-2 shadow-lg rounded' >
-                  <nav>
-
-                    <Link to={"/favorites"} className='whitespace-nowrap hidden md:block hover:bg-slate-100 p-2' onClick={() => setMenuDisplay(preve => !preve)}>My Favorites</Link>
-
-
-                  </nav>
-                </div>
-              )
-            }
+            {menuDisplay && (
+              <div className="absolute bg-white bottom-0 top-11 h-fit p-2 shadow-lg rounded">
+                <nav>
+                  <Link
+                    to="/favorites"
+                    className="whitespace-nowrap hidden md:block hover:bg-slate-100 p-2"
+                    onClick={() => setMenuDisplay((prev) => !prev)}
+                  >
+                    My Favorites
+                  </Link>
+                </nav>
+              </div>
+            )}
             {User ? (
-              <button className="bg-red-500 text-white p-2 rounded-md transition-colors duration-200 hover:bg-red-600" onClick={handleLogout}>
+              <button
+                className="bg-red-500 text-white p-2 rounded-md transition-colors duration-200 hover:bg-red-600"
+                onClick={handleLogout}
+              >
                 Logout
               </button>
             ) : (
@@ -108,35 +119,48 @@ const Navbar = () => {
 
       <Grid container justifyContent={"center"} columnSpacing={3} spacing={2} style={{ marginBottom: "12px", marginTop: "6px" }}>
         <Grid item>
-          <Button variant="text" onClick={() => {
-            fetchMovies();
-            fetchActors();
-            fetchProducers(); navigate("/")
-          }} className="hover:bg-gray-200 transition-colors duration-200 rounded-md p-2">
+          <Button
+            variant="text"
+            onClick={() => {
+              fetchMovies();
+              fetchActors();
+              fetchProducers();
+              navigate("/");
+            }}
+            className="hover:bg-gray-200 transition-colors duration-200 rounded-md p-2"
+          >
             Movies
           </Button>
         </Grid>
         <Grid item>
-          <Button variant="text" onClick={() => {
-            fetchMovies();
-            fetchActors();
-            fetchProducers(); navigate("/ActorsHome")
-          }} className="hover:bg-gray-200 transition-colors duration-200 rounded-md p-2">
+          <Button
+            variant="text"
+            onClick={() => {
+              fetchMovies();
+              fetchActors();
+              fetchProducers();
+              navigate("/ActorsHome");
+            }}
+            className="hover:bg-gray-200 transition-colors duration-200 rounded-md p-2"
+          >
             Actors
           </Button>
         </Grid>
         <Grid item>
-          <Button variant="text" onClick={() => {
-            fetchMovies();
-            fetchActors();
-            fetchProducers();
-            navigate("/ProducersHome")
-          }} className="hover:bg-gray-200 transition-colors duration-200 rounded-md p-2">
+          <Button
+            variant="text"
+            onClick={() => {
+              fetchMovies();
+              fetchActors();
+              fetchProducers();
+              navigate("/ProducersHome");
+            }}
+            className="hover:bg-gray-200 transition-colors duration-200 rounded-md p-2"
+          >
             Producers
           </Button>
         </Grid>
       </Grid>
-
     </>
   );
 };

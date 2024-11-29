@@ -20,9 +20,10 @@ const StyledCard = styled(Card)(({ theme }) => ({
   flexDirection: 'column',
   textAlign: 'center',
   cursor: 'pointer',
-  height: '550px',
+  height: '500px', // Slightly increased height for better layout
   '&:hover': {
     transform: 'scale(1.05)',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.1)', // Added shadow on hover
   },
 }));
 
@@ -68,8 +69,8 @@ const Popularmovies = () => {
     navigate(`/PopularMovieDetails/${movieId}`); // Redirect to the specific movie's details page
   };
 
-  if (loading) return <CircularProgress />;
-  if (error) return <Typography>{error}</Typography>;
+  if (loading) return <CircularProgress sx={{ display: 'block', margin: '20px auto' }} />;
+  if (error) return <Typography align="center" color="error">{error}</Typography>;
 
   return (
     <Box sx={{ padding: 2 }}>
@@ -80,21 +81,18 @@ const Popularmovies = () => {
         {movies.map((movie) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={movie.imdbID}>
             <StyledCard onClick={() => handleCardClick(movie.imdbID)}>
-              <Typography variant="h6" align="center" gutterBottom>
-                {movie.Title}
-              </Typography>
               <CardMedia
                 component="img"
-                image={movie.Poster}
+                image={movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/300x450?text=No+Image'}
                 alt={movie.Title}
-                sx={{ height: 300 }}
+                sx={{ height: 300, objectFit: 'cover' }}
               />
               <CardContent>
+                <Typography variant="h6" align="center" gutterBottom>
+                  {movie.Title}
+                </Typography>
                 <Typography variant="body2" color="text.secondary">
                   Release Date: {movie.Year}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ marginTop: 1 }}>
-                  Plot: {movie.Plot || 'No plot available'}
                 </Typography>
                 <Button
                   variant="contained"
