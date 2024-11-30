@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   backgroundColor: '#f5f5f5',
@@ -59,9 +60,9 @@ const Popularmovies = () => {
     if (!favorites.some((fav) => fav.imdbID === movie.imdbID)) {
       favorites.push(movie);
       localStorage.setItem('favorites', JSON.stringify(favorites));
-      alert(`${movie.Title} added to favorites!`);
+      toast.success(`${movie.Title} added to favorites!`);
     } else {
-      alert(`${movie.Title} is already in favorites.`);
+      toast.error(`${movie.Title} is already in favorites.`);
     }
   };
 

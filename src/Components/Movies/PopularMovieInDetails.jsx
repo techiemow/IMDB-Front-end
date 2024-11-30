@@ -15,6 +15,7 @@ import {
   Paper,
   Button,
 } from '@mui/material';
+import { toast } from 'react-toastify';
 
 const PopularMovieInDetails = () => {
   const { id } = useParams();
@@ -49,9 +50,9 @@ const PopularMovieInDetails = () => {
     if (!favorites.some((fav) => fav.imdbID === movie.imdbID)) {
       favorites.push(movie);
       localStorage.setItem('favorites', JSON.stringify(favorites));
-      alert(`${movie.Title} added to favorites!`);
+      toast.success(`${movie.Title} added to favorites!`);
     } else {
-      alert(`${movie.Title} is already in favorites.`);
+      toast.error(`${movie.Title} is already in favorites.`);
     }
   };
 
